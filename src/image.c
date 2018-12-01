@@ -300,9 +300,9 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
                 free_image(label);
 
                 // added by Cuda Chen
-#ifdef OPENCV
-                crop_and_save_image_cv(img_ref, labelstr, left, top, right - left, bot - top);
-#endif
+                image cropped = crop_image(img_ref, left, top, right - left, bot - top);
+                save_image(cropped, labelstr);
+                free_image(cropped);
             }
             if (dets[i].mask){
                 image mask = float_to_image(14, 14, 1, dets[i].mask);
@@ -313,12 +313,6 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
                 free_image(resized_mask);
                 free_image(tmask);
             }
-
-            // added by Cuda Chen
-//#ifdef OPENCV
-//            sprintf(filename, "%d", i);
-//            crop_and_save_image_cv(im, filename, b.x, b.y, b.w, b.h);
-//#endif
         }
     }
 

@@ -20,7 +20,7 @@ image load_image_cv(char *filename, int channels);
 int show_image_cv(image im, const char* name, int ms);
 
 /* added by Cuda Chen */
-void crop_and_save_image_cv(image im, const char *name, int x, int y, int width, int height);
+//void crop_and_save_image_cv(image im, const char *name, int x, int y, int width, int height);
 #endif
 
 float get_color(int c, int x, int max);
