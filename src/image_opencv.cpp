@@ -5,6 +5,9 @@
 #include "opencv2/opencv.hpp"
 #include "image.h"
 
+// added by Cuda Chen
+#include <string>
+
 using namespace cv;
 
 extern "C" {
@@ -128,6 +131,20 @@ void make_window(char *name, int w, int h, int fullscreen)
         resizeWindow(name, w, h);
         if(strcmp(name, "Demo") == 0) moveWindow(name, 0, 0);
     }
+}
+
+/* added by Cuda Chen */
+void crop_and_save_image_cv(image im, const char *name, int x, int y, int width, int height)
+{
+    Mat temp = image_to_mat(im);
+    std::string filename(name);
+    filename.append(".bmp");
+
+    Rect roi(x, y, width, height);
+
+    Mat croppedImage = temp(roi);
+
+    imwrite(filename, croppedImage);
 }
 
 }

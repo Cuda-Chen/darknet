@@ -240,9 +240,12 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 {
     int i,j;
 
+    image img_ref = copy_image(im);
+
     for(i = 0; i < num; ++i){
         char labelstr[4096] = {0};
         int class = -1;
+
         for(j = 0; j < classes; ++j){
             if (dets[i].prob[j] > thresh){
                 if (class < 0) {
@@ -295,6 +298,11 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
                 image label = get_label(alphabet, labelstr, (im.h*.03));
                 draw_label(im, top + width, left, label, rgb);
                 free_image(label);
+
+                // added by Cuda Chen
+#ifdef OPENCV
+                crop_and_save_image_cv(img_ref, labelstr, left, top, right - left, bot - top);
+#endif
             }
             if (dets[i].mask){
                 image mask = float_to_image(14, 14, 1, dets[i].mask);
@@ -305,8 +313,16 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
                 free_image(resized_mask);
                 free_image(tmask);
             }
+
+            // added by Cuda Chen
+//#ifdef OPENCV
+//            sprintf(filename, "%d", i);
+//            crop_and_save_image_cv(im, filename, b.x, b.y, b.w, b.h);
+//#endif
         }
     }
+
+    free_image(img_ref);
 }
 
 void transpose_image(image im)
