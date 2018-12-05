@@ -240,11 +240,18 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 {
     int i,j;
 
+    // added by Cuda Chen
+    // a copy for input image (input image will be drawn with some lines lately)
     image img_ref = copy_image(im);
+    int counter = 0;
 
     for(i = 0; i < num; ++i){
         char labelstr[4096] = {0};
         int class = -1;
+
+        // added by Cuda Chen
+        // segmented image filename
+        char segmented[100] = {0};
 
         for(j = 0; j < classes; ++j){
             if (dets[i].prob[j] > thresh){
@@ -300,9 +307,12 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
                 free_image(label);
 
                 // added by Cuda Chen
+                // output segmented image
+                sprintf(segmented, "%d", counter);
                 image cropped = crop_image(img_ref, left, top, right - left, bot - top);
-                save_image(cropped, labelstr);
+                save_image(cropped, segmented);
                 free_image(cropped);
+                counter++;
             }
             if (dets[i].mask){
                 image mask = float_to_image(14, 14, 1, dets[i].mask);
