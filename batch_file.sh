@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# stupid batch image detection then crop script
+
 filename='filelist.txt'
 exec < $filename
 counter=0
